@@ -1,9 +1,11 @@
-package com.leromaro.sistemapacientes.screens
+package com.leromaro.sistemapacientes.ui.screens.components
 
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun ShowButton(
@@ -13,7 +15,8 @@ fun ShowButton(
 ){
     Button(
         onClick =  onClick ,
-        modifier = modifier)  {
+        modifier = modifier
+        )  {
         Text(text = text)
     }
 }

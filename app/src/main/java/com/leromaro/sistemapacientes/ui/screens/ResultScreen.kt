@@ -1,11 +1,10 @@
-package com.leromaro.sistemapacientes.screens
+package com.leromaro.sistemapacientes.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,19 +14,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.leromaro.sistemapacientes.PracticasViewModel
+import com.leromaro.sistemapacientes.ui.screens.components.ShowButton
+import com.leromaro.sistemapacientes.ui.viewModel.PracticasViewModel
 import kotlin.system.exitProcess
 
 @Composable
 fun ResultScreen(navController : NavController, practicasViewModel: PracticasViewModel) {
     val pacientesTotales = practicasViewModel.pacientesTotales
     val codigosTotales = practicasViewModel.codigosTotales
-    Column (modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround){
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        //        columna superior
         Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -44,28 +46,13 @@ fun ResultScreen(navController : NavController, practicasViewModel: PracticasVie
                 )
             }
         }
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            ShowButton("MODIFICAR",
-                modifier = Modifier.width(150.dp),
-                onClick = { navController.popBackStack() } )
-//            Button(
-//                onClick = {
-//                    navController.popBackStack()},
-//                modifier = Modifier.width(150.dp))  {
-//                Text(text = "VOLVER")
-//            }
-            Spacer(modifier = Modifier.height(50.dp))
-            ShowButton("SALIR",
-                modifier = Modifier.width(150.dp),
-                onClick = { exitProcess(0) } )
-//            Button(
-//                onClick = { exitProcess(0) },
-//                modifier = Modifier.width(150.dp))  {
-//                Text(text = "SALIR")
-//            }
-            Banner()
-        }
+        ShowButton("MODIFICAR",
+            modifier = Modifier.width(150.dp),
+            onClick = { navController.popBackStack() } )
+        Spacer(modifier = Modifier.height(50.dp))
+        ShowButton("SALIR",
+            modifier = Modifier.width(150.dp),
+            onClick = { exitProcess(0) } )
+        Banner()
     }
 }

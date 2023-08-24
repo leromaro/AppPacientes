@@ -1,4 +1,4 @@
-package com.leromaro.sistemapacientes.screens
+package com.leromaro.sistemapacientes.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -11,10 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.leromaro.sistemapacientes.R
 import com.leromaro.sistemapacientes.navigation.AppScreens
 import kotlinx.coroutines.delay
@@ -41,11 +39,4 @@ fun Splash() {
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold)
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSplash(){
-    val navController = rememberNavController()
-    SplashScreen(navController)
 }

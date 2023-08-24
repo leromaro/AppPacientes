@@ -1,39 +1,43 @@
 package com.leromaro.sistemapacientes.navigation
 
+import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.leromaro.sistemapacientes.screens.ResultScreen
-import com.leromaro.sistemapacientes.screens.SplashScreen
-import com.leromaro.sistemapacientes.screens.StartScreen
-import com.leromaro.sistemapacientes.PracticasViewModel
-import com.leromaro.sistemapacientes.screens.AppBar
-import com.leromaro.sistemapacientes.screens.DialogScreen
-import com.leromaro.sistemapacientes.screens.Banner
+import com.leromaro.sistemapacientes.ui.screens.ResultScreen
+import com.leromaro.sistemapacientes.ui.screens.SplashScreen
+import com.leromaro.sistemapacientes.ui.screens.StartScreen
+import com.leromaro.sistemapacientes.ui.viewModel.PracticasViewModel
+import com.leromaro.sistemapacientes.ui.screens.AppBar
+import com.leromaro.sistemapacientes.ui.screens.components.DialogScreen
+import com.leromaro.sistemapacientes.ui.screens.Banner
 
 @Composable
-fun AppNavigation(practicasViewModel: PracticasViewModel) {
+fun AppNavigation(viewModel: PracticasViewModel, context : Context) {
     val navController = rememberNavController()
+    LaunchedEffect(true) {
+        viewModel.loadSavedData(context)
+    }
     NavHost(navController = navController, startDestination = AppScreens.SplashScreen.route) {
         composable(route = AppScreens.StartScreen.route) {
-            StartScreen(navController, practicasViewModel)
-            AppBar(navController)
+            StartScreen(navController, viewModel)
         }
         composable(route = AppScreens.SplashScreen.route) {
             SplashScreen(navController)
         }
         composable(route = AppScreens.ResultScreen.route) {
-            ResultScreen(navController, practicasViewModel)
+            ResultScreen(navController, viewModel)
         }
         composable(route = AppScreens.DialogScreen.route) {
             DialogScreen(navController)
         }
         composable(route = AppScreens.AppBar.route){
-            AppBar(navController)
+            AppBar(navController, viewModel)
         }
-        composable(route = AppScreens.Banner.route){
-            Banner()
-        }
+//        composable(route = AppScreens.Banner.route){
+//            Banner()
+//        }
     }
 }
