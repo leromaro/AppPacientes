@@ -4,7 +4,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.leromaro.sistemapacientes.R
 
 @Composable
 fun DialogScreen(navController : NavController) {
@@ -21,7 +23,11 @@ fun DialogScreen(navController : NavController) {
                 "Presione el botón x amarillo para limpiar la caja de texto.\r\n\r" +
                 "Para guardar una atención, elija el par paciente - código de cada atención y presione el botón + azul.\r\n\r"+
                 "Si lo desea puede borrar las atenciones agregadas preionando el botón x rojo.\r\n\r"+
-                "Al terminar de llenar todas las atenciones del mes, abra el menú en la esquina superior derecha y elija Resumen \r\n\r" +
-                "Desde el menú tiene la opción de borrar todo el contenido cargado o salir de la app que también borrará todo el contenido")}
+                "Al terminar de llenar todas las atenciones del mes, abra el menú en la esquina superior derecha y elija ${stringResource(
+                    id = R.string.resumen_mensual
+                )} \r\n\r" +
+                "Desde el menú tiene la opción de ${stringResource(id = R.string.borrar)} todo el contenido cargado o ${stringResource(
+                    id = R.string.salir
+                )} de la app que también borrará todo el contenido")}
     )
 }

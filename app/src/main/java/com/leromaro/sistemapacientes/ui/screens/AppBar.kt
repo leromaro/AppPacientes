@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.leromaro.sistemapacientes.R
 import com.leromaro.sistemapacientes.navigation.AppScreens
-import com.leromaro.sistemapacientes.ui.viewModel.PracticasViewModel
+import com.leromaro.sistemapacientes.ui.viewModel.AttendViewModel
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.*
@@ -37,80 +37,63 @@ import kotlin.system.exitProcess
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar(navController: NavController, viewModel: PracticasViewModel) {
+fun AppBar(navController: NavController, viewModel: AttendViewModel) {
     var expanded by remember { mutableStateOf(false) }
     var expandedMenu by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+    val erase = stringResource(id = R.string.toast_borrado)
 
-    TopAppBar(
-        title = {
-            Row(
-                modifier = Modifier,
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(text = stringResource(id = R.string.app_name))
-//                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-            }
-        },
-        navigationIcon = {
-            IconButton(
-                onClick = {
-                    navController.navigate(AppScreens.DialogScreen.route)
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = "Info"
-                )
-            }
-        },
-        actions = {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = "Menu",
-                modifier = Modifier
-                    .clickable {
-                        expanded = !expanded
-                    }
-            )
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .widthIn(max = 200.dp)
-            ) {
-                DropdownMenuItem(
-                    text = { Text(text = "Resumen")},
-                    onClick = { expanded = false
-                        expandedMenu = true }
-                )
-                DropdownMenuItem(
-                    onClick = {
-                        expanded = false
-                        viewModel.resetData()
-                        coroutineScope.launch {
-                            viewModel.clearDataFiles(context)
-                            viewModel.showToast(context, "Datos borrados")
-                        }
-                    },
-                    text = { Text(text = "Borrar")}
-                )
-                DropdownMenuItem(
-                    onClick = {
-                        expanded = false
-                        coroutineScope.launch {
-                            viewModel.clearDataFiles(context)
-                        }
-                        exitProcess(0)
-                    },
-                    text = {Text(text = "Salir")}
-                )
-            }
+    TopAppBar(title = {
+        Row(
+            modifier = Modifier,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = stringResource(id = R.string.app_name))
         }
-    )
+    }, navigationIcon = {
+        IconButton(onClick = {
+            navController.navigate(AppScreens.DialogScreen.route)
+        }) {
+            Icon(
+                imageVector = Icons.Default.Info, contentDescription = "Info"
+            )
+        }
+    }, actions = {
+        Icon(imageVector = Icons.Default.MoreVert,
+            contentDescription = "Menu",
+            modifier = Modifier.clickable {
+                    expanded = !expanded
+                })
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .widthIn(max = 200.dp)
+        ) {
+            DropdownMenuItem(text = { Text(text = stringResource(id = R.string.resumen_mensual)) }, onClick = {
+                expanded = false
+                expandedMenu = true
+            })
+            DropdownMenuItem(onClick = {
+                expanded = false
+                viewModel.resetData()
+                coroutineScope.launch {
+                    viewModel.clearDataFiles(context)
+                    viewModel.showToast(context, erase)
+                }
+            }, text = { Text(text = stringResource(id = R.string.borrar)) })
+            DropdownMenuItem(onClick = {
+                expanded = false
+                coroutineScope.launch {
+                    viewModel.clearDataFiles(context)
+                }
+                exitProcess(0)
+            }, text = { Text(text = stringResource(id = R.string.salir)) })
+        }
+    })
 
     if (expandedMenu) {
         navController.navigate(AppScreens.ResultScreen.route)

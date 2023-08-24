@@ -23,9 +23,10 @@ fun ShowSpinner(
     expanded: Boolean,
     onValueSelected: (String) -> Unit,
     onDismiss: () -> Unit,
+    onSusses : () -> Unit,
     itemList: List<String>
 ) {
-// TÍTULO
+// TITTLE
     Text(
         text = tittle, fontSize = 15.sp
     )
@@ -37,7 +38,7 @@ fun ShowSpinner(
     ) {
         Row(
             modifier = Modifier.clickable {
-                onDismiss()
+                onSusses()
             }, verticalAlignment = Alignment.CenterVertically
         ) {
             Text(

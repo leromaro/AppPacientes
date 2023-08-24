@@ -11,7 +11,7 @@ import com.leromaro.sistemapacientes.model.Codigo
 import com.leromaro.sistemapacientes.model.Pacientes
 import java.io.File
 
-class PracticasViewModel : ViewModel() {
+class AttendViewModel : ViewModel() {
     val listAttend = mutableStateListOf<Pair<String, String>>()
     val listPatients = mutableStateListOf<Pacientes>()
     var currentValuePatients by  mutableStateOf("sin pacientes")

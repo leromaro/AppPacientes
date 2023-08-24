@@ -9,13 +9,12 @@ import androidx.navigation.compose.rememberNavController
 import com.leromaro.sistemapacientes.ui.screens.ResultScreen
 import com.leromaro.sistemapacientes.ui.screens.SplashScreen
 import com.leromaro.sistemapacientes.ui.screens.StartScreen
-import com.leromaro.sistemapacientes.ui.viewModel.PracticasViewModel
+import com.leromaro.sistemapacientes.ui.viewModel.AttendViewModel
 import com.leromaro.sistemapacientes.ui.screens.AppBar
 import com.leromaro.sistemapacientes.ui.screens.components.DialogScreen
-import com.leromaro.sistemapacientes.ui.screens.Banner
 
 @Composable
-fun AppNavigation(viewModel: PracticasViewModel, context : Context) {
+fun AppNavigation(viewModel: AttendViewModel, context : Context) {
     val navController = rememberNavController()
     LaunchedEffect(true) {
         viewModel.loadSavedData(context)

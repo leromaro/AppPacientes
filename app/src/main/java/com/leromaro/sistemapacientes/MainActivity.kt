@@ -8,15 +8,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModelProvider
 import com.leromaro.sistemapacientes.navigation.AppNavigation
 import com.leromaro.sistemapacientes.ui.theme.SistemaPacientesTheme
-import com.leromaro.sistemapacientes.ui.viewModel.PracticasViewModel
+import com.leromaro.sistemapacientes.ui.viewModel.AttendViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel = PracticasViewModel()
+        val viewModel = AttendViewModel()
         setContent {
             SistemaPacientesTheme {
                 // A surface container using the 'background' color from the theme

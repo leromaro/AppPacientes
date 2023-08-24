@@ -5,10 +5,16 @@
     <string name="agregar_atencion">agregar atención</string>
     <string name="guardado">Guardado</string>
     <string name="error_nuevo_paciente">Ingrese un nuevo paciente</string>
-    <string name="toast_borrado">Texto borrado</string>
+    <string name="toast_borrado">Borrado</string>
+    <string name="borrar">Borrar</string>
     <string name="eliminar">eliminar</string>
     <string name="seleccion_paciente">Selección de paciente</string>
     <string name="seleccion_codigo">Selección de código</string>
     <string name="sin_pacientes">sin pacientes</string>
     <string name="error_un_paciente">Debe ingresar al menos un paciente</string>
+    <string name="resumen_mensual">Resumen mensual</string>
+    <string name="pacientes_totales">Pacientes totales</string>
+    <string name="modificar">Modificar</string>
+    <string name="salir">Salir</string>
+
 </resources>
