@@ -1,8 +1,5 @@
 package com.leromaro.sistemapacientes.ui.screens
 
-import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -23,6 +19,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import com.leromaro.sistemapacientes.R
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,30 +29,37 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.leromaro.sistemapacientes.model.Codigo
 import com.leromaro.sistemapacientes.model.Pacientes
-import com.leromaro.sistemapacientes.ui.screens.components.ShowButton
+import com.leromaro.sistemapacientes.ui.screens.components.ShowIcon
 import com.leromaro.sistemapacientes.ui.viewModel.PracticasViewModel
 
 // borrar un paciente agregado
 // guardar los pacientes y atenciones en un archivo temporal que se lea al abrir
-//agregar iconos
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StartScreen(navController: NavController, viewModel: PracticasViewModel) {
-    val listaPacientes = viewModel.listaPacientes
-    var expandedPacientes by rememberSaveable { mutableStateOf(false) }
-    var expandedPracticas by rememberSaveable { mutableStateOf(false) }
-    val currentValuePacientes = viewModel.currentValuePacientes
-    val currentValueCodigos = viewModel.currentValueCodigos
-    var pacienteValue by rememberSaveable { mutableStateOf("") }
+    val message = stringResource(id = R.string.guardado)
+    val noPatients = stringResource(id = R.string.sin_pacientes)
+    val errorOnePatient = stringResource(id = R.string.error_un_paciente)
+    val saved = stringResource(id = R.string.guardado)
+    val erase = stringResource(id = R.string.toast_borrado)
+    val errorNewPatient = stringResource(id = R.string.error_nuevo_paciente)
+    val patientList = viewModel.listPatients
+    var expandedPatients by rememberSaveable { mutableStateOf(false) }
+    var expandedCodes by rememberSaveable { mutableStateOf(false) }
+    val currentValuePatients = viewModel.currentValuePatients
+    val currentValueCodes = viewModel.currentValueCodes
+    var patientValue by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
-//COLUMNA GENERAL
+//COLUMN GENERAL
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,7 +72,7 @@ fun StartScreen(navController: NavController, viewModel: PracticasViewModel) {
         ) {
 //APPBAR
             AppBar(navController, viewModel)
-// FILA CAJA TEXTO
+// FILA CAJA TEXT
                 Row(
                     modifier = Modifier, verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -78,9 +82,9 @@ fun StartScreen(navController: NavController, viewModel: PracticasViewModel) {
                         ),
                         singleLine = true,
                         maxLines = 1,
-                        value = pacienteValue,
-                        onValueChange = { pacienteValue = it },
-                        label = { Text("Nombre del paciente") })
+                        value = patientValue,
+                        onValueChange = { patientValue = it },
+                        label = { Text(stringResource(id = R.string.paciente)) })
 //                    onValueChange = { pacienteValue = it
 ////                                    if (pacienteValue.length >= 3){
 ////                                        listPacientesFiltrado.clear()
@@ -89,45 +93,57 @@ fun StartScreen(navController: NavController, viewModel: PracticasViewModel) {
 ////                                                listPacientesFiltrado.add(item)
                     Spacer(Modifier.width(ButtonDefaults.IconSpacing))
 //ADD
-                    Icon(modifier = Modifier
-                        .clickable {
-                            if (pacienteValue.isNotEmpty() && !listaPacientes.contains(
-                                    Pacientes(pacienteValue)
+                    ShowIcon(
+                        Icons.Default.Add,
+                        stringResource(id = R.string.agregar_paciente),
+                        onIconClick = {
+                            if (patientValue.isNotEmpty() && !patientList.contains(
+                                    Pacientes(patientValue)
                                 )
                             ) {
-                                listaPacientes.add(Pacientes(pacienteValue))
-                                viewModel.currentValuePacientes = pacienteValue
-                                showToast(context, "Paciente guardado\r\n\r${pacienteValue}")
+                                patientList.add(Pacientes(patientValue))
+                                viewModel.currentValuePatients = patientValue
+                                viewModel.showToast(
+                                    context,
+                                    "$message \r\n\r${patientValue}"
+                                )
                             } else {
-                                showToast(context, "Ingrese un nuevo paciente")
+                                viewModel.showToast(context, errorNewPatient)
                             }
-                            for (i in 0 until listaPacientes.size) {
-                                Log.d("MiLog", "paciente" + listaPacientes[i])
-                            }
-                            pacienteValue = ""
-                        }
-                        .size(25.dp),
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "agregar")
+                            patientValue = ""
+                        },
+                        Color.Green)
                     Spacer(modifier = Modifier.width(20.dp))
-//BORRAR
-                    Icon(modifier = Modifier
-                        .clickable {
-                            pacienteValue = ""
-                        }
-                        .size(25.dp),
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = "eliminar")
+//ERASE
+                    ShowIcon(
+                        Icons.Default.Clear,
+                        stringResource(id = R.string.eliminar),
+                        onIconClick = {
+                            viewModel.showToast(context, erase)
+                            patientValue = ""
+                        },
+                        Color.Yellow)
                 }
                 Spacer(modifier = Modifier.height(20.dp))//entre caja y spinner
-//FILA SPINNERS Y BOTÓN
+//FILA SPINNERS Y BUTTON
                 Row {
-// COLUMNA SPINNERS
+// COLUMN SPINNERS
                     Column {
                         Text(
-                            text = "Selección de paciente", fontSize = 15.sp
+                            text = stringResource(id = R.string.seleccion_paciente), fontSize = 15.sp
                         )
-//SPINNER PACIENTES
+//SPINNER PATIENTS
+//                        ShowSpinner(
+//                            currentValue = currentValuePatients,
+//                            expanded = expandedPatients,
+//                            onValueSelected = { newValue ->
+//                                viewModel.currentValuePatients = newValue
+//                            },
+//                            onDismiss = {
+//                                expandedPatients = false
+//                            },
+//                            itemList = patientList.map { it.paciente }
+//                        )
                         Row(
                             modifier = Modifier,
                             verticalAlignment = Alignment.CenterVertically,
@@ -135,26 +151,26 @@ fun StartScreen(navController: NavController, viewModel: PracticasViewModel) {
                         ) {
                             Row(
                                 modifier = Modifier.clickable {
-                                    expandedPacientes = !expandedPacientes
+                                    expandedPatients = !expandedPatients
                                 }, verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
                                     modifier = Modifier.width(250.dp),
-                                    text = currentValuePacientes,
+                                    text = currentValuePatients,
                                     fontSize = 20.sp
                                 )
                                 Icon(
                                     imageVector = Icons.Filled.ArrowDropDown,
                                     contentDescription = null
                                 )
-                                DropdownMenu(expanded = expandedPacientes, onDismissRequest = {
-                                    expandedPacientes = false
+                                DropdownMenu(expanded = expandedPatients, onDismissRequest = {
+                                    expandedPatients = false
                                 }) {
-                                    listaPacientes.forEach {
+                                    patientList.forEach {
                                         DropdownMenuItem(text = { Text(text = it.paciente) },
                                             onClick = {
-                                                viewModel.currentValuePacientes = it.paciente
-                                                expandedPacientes = false
+                                                viewModel.currentValuePatients = it.paciente
+                                                expandedPatients = false
                                             })
                                     }
                                 }
@@ -162,77 +178,84 @@ fun StartScreen(navController: NavController, viewModel: PracticasViewModel) {
                         }
                         Spacer(modifier = Modifier.height(40.dp))//entre pinner y spinner
                         Text(
-                            text = "Selección de código", fontSize = 15.sp
+                            text = stringResource(id = R.string.seleccion_codigo), fontSize = 15.sp
                         )
-//SPINNER CODIGOS
+//SPINNER CODES
+//                        ShowSpinner(
+//                            currentValue = currentValueCodes,
+//                            expanded = expandedPractics,
+//                            onValueSelected = { newValue ->
+//                                viewModel.currentValueCodes = newValue
+//                            },
+//                            onDismiss = {
+//                                expandedPractics = false
+//                            },
+//                            itemList = Codigo.values().map { it.tipo }
+//                        )
                         Row(
-                            modifier = Modifier, verticalAlignment = Alignment.CenterVertically
+                            modifier = Modifier,
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
                         ) {
                             Row(
                                 modifier = Modifier.clickable {
-                                    expandedPracticas = !expandedPracticas
+                                    expandedCodes = !expandedCodes
                                 }, verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
                                     modifier = Modifier.width(250.dp),
-                                    text = currentValueCodigos,
+                                    text = currentValueCodes,
                                     fontSize = 20.sp
                                 )
                                 Icon(
                                     imageVector = Icons.Filled.ArrowDropDown,
                                     contentDescription = null
                                 )
-                                DropdownMenu(expanded = expandedPracticas, onDismissRequest = {
-                                    expandedPracticas = false
+                                DropdownMenu(expanded = expandedCodes, onDismissRequest = {
+                                    expandedCodes = false
                                 }) {
                                     Codigo.values().forEach {
                                         DropdownMenuItem(
                                             text = { Text(text = it.tipo) },
                                             onClick = {
-                                                viewModel.currentValueCodigos = it.tipo
-                                                expandedPracticas = false
+                                                viewModel.currentValueCodes = it.tipo
+                                                expandedCodes = false
                                             })
                                     }
                                 }
                             }
                         }
                     }
-//                    Column(
-//                        verticalArrangement = Arrangement.Center
-//                        ) {
-                        ShowButton(
-                            "+", onClick = {
-                                if (currentValuePacientes != "sin pacientes") {
-                                    viewModel.listaAtencion.add(
-                                        Pair(
-                                            currentValuePacientes, currentValueCodigos
-                                        )
-                                    )
-                                    showToast(
-                                        context,
-                                        "Atención guardada\r\n\r${currentValuePacientes} - $currentValueCodigos"
-                                    )
-                                } else {
-                                    showToast(context, "Debe ingresar al menos un paciente")
-                                }
-                            },
-                            modifier = Modifier.width(40.dp)
-                        )
+                    ShowIcon(
+                        Icons.Default.Add,
+                        description = stringResource(id = R.string.agregar_atencion),
+                        onIconClick = {
+                            if (currentValuePatients != noPatients) {
+                            viewModel.listAttend.add(
+                                Pair(
+                                    currentValuePatients, currentValueCodes
+                                )
+                            )
+                            viewModel.showToast(
+                                context,
+                                "$saved \r\n\r${currentValuePatients} - $currentValueCodes"
+                            )
+                        } else {
+                            viewModel.showToast(context, errorOnePatient)
+                        } },
+                        Color.Blue)
                     }
 //                }
-//ATENCIONCARD
+//ATTEND CARD
             LazyColumn {
-                itemsIndexed(viewModel.listaAtencion){indice, item->
+                itemsIndexed(viewModel.listAttend){ indice, item->
                     AtencionCard(context, viewModel, indice, item)
 
                 }
                 }
             }
-//ANUNCIOS
+//ADS
             Banner()
         }
     }
 
-fun showToast(contexto: Context, mensaje: String) {
-    Toast.makeText(contexto, mensaje, Toast.LENGTH_SHORT).show()
-}

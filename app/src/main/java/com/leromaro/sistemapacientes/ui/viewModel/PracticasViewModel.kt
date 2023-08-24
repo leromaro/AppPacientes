@@ -1,6 +1,7 @@
 package com.leromaro.sistemapacientes.ui.viewModel
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -11,74 +12,77 @@ import com.leromaro.sistemapacientes.model.Pacientes
 import java.io.File
 
 class PracticasViewModel : ViewModel() {
-    val listaAtencion = mutableStateListOf<Pair<String, String>>()
-    val listaPacientes = mutableStateListOf<Pacientes>()
-    var currentValuePacientes by  mutableStateOf("sin pacientes")
-    var currentValueCodigos by   mutableStateOf(Codigo.CONSULTAS.tipo)
-    val pacientesTotales: Int
-        get() = listaAtencion.map { it.first }.distinct().size
+    val listAttend = mutableStateListOf<Pair<String, String>>()
+    val listPatients = mutableStateListOf<Pacientes>()
+    var currentValuePatients by  mutableStateOf("sin pacientes")
+    var currentValueCodes by   mutableStateOf(Codigo.CONSULTAS.tipo)
+    val totalPatients: Int
+        get() = listAttend.map { it.first }.distinct().size
 
-    val codigosTotales: Map<String, Int>
-        get() = listaAtencion.groupBy { it.second }.mapValues { it.value.size }
+    val totalCodes: Map<String, Int>
+        get() = listAttend.groupBy { it.second }.mapValues { it.value.size }
 
+    fun showToast(contexto: Context, mensaje: String) {
+        Toast.makeText(contexto, mensaje, Toast.LENGTH_SHORT).show()
+    }
     fun lazyColumnDeleteItem(context: Context) {
         val file = File(context.filesDir, "contactos.txt")
         file.delete()
-        for (item in listaAtencion) {
+        for (item in listAttend) {
             file.appendText("${item.first}\n${item.second}\n")
         }
     }
     fun clearDataFiles(context: Context) {
-        currentValuePacientes = "sin pacientes"
-        currentValueCodigos = Codigo.CONSULTAS.tipo
+        currentValuePatients = "sin pacientes"
+        currentValueCodes = Codigo.CONSULTAS.tipo
         context.deleteFile("pacientes.dat")
         context.deleteFile("atencion.dat")
     }
 
     fun resetData() {
-        listaAtencion.clear()
-        listaPacientes.clear()
+        listAttend.clear()
+        listPatients.clear()
     }
 
     fun loadSavedData(context: Context) {
-        val pacientesFile = File(context.filesDir, "pacientes.dat")
-        val atencionFile = File(context.filesDir, "atencion.dat")
+        val patientsFile = File(context.filesDir, "pacientes.dat")
+        val attendFile = File(context.filesDir, "atencion.dat")
 
-        if (pacientesFile.exists() && atencionFile.exists()) {
-            val pacientesData = pacientesFile.readText()
-            val atencionData = atencionFile.readText()
+        if (patientsFile.exists() && attendFile.exists()) {
+            val pactientsData = patientsFile.readText()
+            val attendData = attendFile.readText()
 
-            val pacientesList: List<Pacientes> = parsePacientesData(pacientesData)
-            val atencionList: List<Pair<String, String>> = parseAtencionData(atencionData)
+            val patientsList: List<Pacientes> = parsePatientsData(pactientsData)
+            val attendList: List<Pair<String, String>> = parseAttendData(attendData)
 
             // Agrega los datos a las listas correspondientes en el ViewModel
-            listaPacientes.addAll(pacientesList)
-            listaAtencion.addAll(atencionList)
+            listPatients.addAll(patientsList)
+            listAttend.addAll(attendList)
         }
     }
 
-    private fun parsePacientesData(data: String): List<Pacientes> {
+    private fun parsePatientsData(data: String): List<Pacientes> {
         val lines = data.lines()
-        val pacientesList = mutableListOf<Pacientes>()
+        val patientsList = mutableListOf<Pacientes>()
         for (line in lines) {
-            val paciente = Pacientes(line)
-            pacientesList.add(paciente)
+            val patient = Pacientes(line)
+            patientsList.add(patient)
         }
-        return pacientesList
+        return patientsList
     }
 
-    private fun parseAtencionData(data: String): List<Pair<String, String>> {
+    private fun parseAttendData(data: String): List<Pair<String, String>> {
         val lines = data.lines()
-        val atencionList = mutableListOf<Pair<String, String>>()
+        val attendList = mutableListOf<Pair<String, String>>()
         for (line in lines) {
             val parts = line.split(',')
             if (parts.size == 2) {
-                val paciente = parts[0].trim()
-                val codigo = parts[1].trim()
-                val atencionPair = paciente to codigo
-                atencionList.add(atencionPair)
+                val patient = parts[0].trim()
+                val code = parts[1].trim()
+                val attendPair = patient to code
+                attendList.add(attendPair)
             }
         }
-        return atencionList
+        return attendList
     }
 }

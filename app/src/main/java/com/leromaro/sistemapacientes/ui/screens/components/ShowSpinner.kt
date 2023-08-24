@@ -4,6 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -11,54 +13,52 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.leromaro.sistemapacientes.model.Pacientes
 
 @Composable
 fun ShowSpinner(
-    text : String,
-    onClick: () -> Unit,
-    value : String,
-    icon : ImageVector,
-    expanded : Boolean,
-    onExpanded : () -> Unit,
-    listaPacientes : List<Pacientes>,
-    textoItem : Pacientes,
-    onDropdown :() -> Unit
-    ) {
-    Text(text = text,
-        fontSize = 15.sp)
+    tittle: String,
+    currentValue: String,
+    expanded: Boolean,
+    onValueSelected: (String) -> Unit,
+    onDismiss: () -> Unit,
+    itemList: List<String>
+) {
+// TÍTULO
+    Text(
+        text = tittle, fontSize = 15.sp
+    )
+//SPINNER PATIENTS
     Row(
         modifier = Modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
         Row(
-            modifier = Modifier
-                .clickable {
-                    onClick
-                           },
-                verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.clickable {
+                onDismiss()
+            }, verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 modifier = Modifier.width(250.dp),
-                text = value,
+                text = currentValue,
                 fontSize = 20.sp
             )
-            Icon(imageVector = icon,
-                contentDescription = null)
-            DropdownMenu(expanded = expanded,
-                onDismissRequest =
-                onExpanded
-            ) {
-                listaPacientes.forEach {
+            Icon(
+                imageVector = Icons.Filled.ArrowDropDown,
+                contentDescription = null
+            )
+            DropdownMenu(expanded = expanded, onDismissRequest = {
+                onDismiss()
+            }) {
+                itemList.forEach { item ->
                     DropdownMenuItem(
-                        text =  {Text(text = textoItem.paciente)} ,
-                        onClick =
-                            onDropdown
-                        )
+                        text = { Text(text = item) },
+                        onClick = {
+                            onValueSelected(item)
+                            onDismiss()
+                        })
                 }
             }
         }

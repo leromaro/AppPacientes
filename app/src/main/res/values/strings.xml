@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Sistema Pacientes</string>
+    <string name="paciente">Nombre del paciente</string>
+    <string name="agregar_paciente">agregar paciente</string>
+    <string name="agregar_atencion">agregar atención</string>
+    <string name="guardado">Guardado</string>
+    <string name="error_nuevo_paciente">Ingrese un nuevo paciente</string>
+    <string name="toast_borrado">Texto borrado</string>
+    <string name="eliminar">eliminar</string>
+    <string name="seleccion_paciente">Selección de paciente</string>
+    <string name="seleccion_codigo">Selección de código</string>
+    <string name="sin_pacientes">sin pacientes</string>
+    <string name="error_un_paciente">Debe ingresar al menos un paciente</string>
 </resources>

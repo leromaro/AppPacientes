@@ -20,8 +20,8 @@ import kotlin.system.exitProcess
 
 @Composable
 fun ResultScreen(navController : NavController, practicasViewModel: PracticasViewModel) {
-    val pacientesTotales = practicasViewModel.pacientesTotales
-    val codigosTotales = practicasViewModel.codigosTotales
+    val pacientesTotales = practicasViewModel.totalPatients
+    val codigosTotales = practicasViewModel.totalCodes
     Column(
         modifier = Modifier
             .fillMaxSize()

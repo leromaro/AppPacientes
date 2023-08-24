@@ -32,7 +32,6 @@ import androidx.compose.material.*
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.*
-import com.leromaro.sistemapacientes.ui.screens.showToast
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
@@ -94,7 +93,7 @@ fun AppBar(navController: NavController, viewModel: PracticasViewModel) {
                         viewModel.resetData()
                         coroutineScope.launch {
                             viewModel.clearDataFiles(context)
-                            showToast(context, "Datos borrados")
+                            viewModel.showToast(context, "Datos borrados")
                         }
                     },
                     text = { Text(text = "Borrar")}
