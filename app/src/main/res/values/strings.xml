@@ -10,7 +10,7 @@
     <string name="eliminar">eliminar</string>
     <string name="seleccion_paciente">Selección de paciente</string>
     <string name="seleccion_codigo">Selección de código</string>
-    <string name="sin_pacientes">sin pacientes</string>
+    <string name="sin_pacientes">SIN PACIENTES</string>
     <string name="error_un_paciente">Debe ingresar al menos un paciente</string>
     <string name="resumen_mensual">Resumen mensual</string>
     <string name="pacientes_totales">Pacientes totales</string>

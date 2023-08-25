@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,9 +25,11 @@ import kotlin.system.exitProcess
 fun ResultScreen(navController : NavController, viewModel: AttendViewModel) {
     val totalPatients = viewModel.totalPatients
     val totalCodes = viewModel.totalCodes
+
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(16.dp)
     ) {
 //COLUMN SUP
         Column(
@@ -48,15 +51,19 @@ fun ResultScreen(navController : NavController, viewModel: AttendViewModel) {
                 )
             }
         }
-        ShowButton(
-            stringResource(id = R.string.modificar),
-            modifier = Modifier.width(150.dp),
-            onClick = { navController.popBackStack() } )
-        Spacer(modifier = Modifier.height(50.dp))
-        ShowButton(
-            stringResource(id = R.string.salir),
-            modifier = Modifier.width(150.dp),
-            onClick = { exitProcess(0) } )
-        Banner()
+        Column(modifier = Modifier,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+            ShowButton(
+                stringResource(id = R.string.modificar),
+                modifier = Modifier.width(150.dp),
+                onClick = { navController.popBackStack() } )
+            Spacer(modifier = Modifier.height(30.dp))
+            ShowButton(
+                stringResource(id = R.string.salir),
+                modifier = Modifier.width(150.dp),
+                onClick = { exitProcess(0) } )
+            Banner()
+        }
     }
 }

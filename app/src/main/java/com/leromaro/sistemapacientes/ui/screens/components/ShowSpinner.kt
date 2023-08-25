@@ -37,7 +37,8 @@ fun ShowSpinner(
         horizontalArrangement = Arrangement.Center
     ) {
         Row(
-            modifier = Modifier.clickable {
+            modifier = Modifier
+                .clickable {
                 onSusses()
             }, verticalAlignment = Alignment.CenterVertically
         ) {

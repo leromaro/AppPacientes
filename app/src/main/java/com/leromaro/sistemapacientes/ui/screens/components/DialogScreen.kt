@@ -17,12 +17,11 @@ fun DialogScreen(navController : NavController) {
             },
         title= {Text(text = "Ayuda")},
         text ={Text(
-            "Ingrese los pacientes de manera que el nombre no se repita (Pérez I y Pérez S)," +
-                " presione el botón + verde para agregar el paciente.\r\n\r" +
-                "El programa diferencia entre mayúsculas y minúsculas: Pérez y pérez contarán como dos pacientes, perez contará como otro. \r\n\r" +
-                "Presione el botón x amarillo para limpiar la caja de texto.\r\n\r" +
-                "Para guardar una atención, elija el par paciente - código de cada atención y presione el botón + azul.\r\n\r"+
-                "Si lo desea puede borrar las atenciones agregadas preionando el botón x rojo.\r\n\r"+
+            "Ingrese los pacientes de manera que el nombre no se repita (PÉREZ I y PÉREZ S)," +
+                " presione el botón verde para agregar el paciente.\r\n\r" +
+                "Presione el botón amarillo si desea limpiar la caja de texto.\r\n\r" +
+                "Para guardar una atención, elija el par paciente - código de cada atención y presione el botón azul.\r\n\r"+
+                "Si lo desea puede borrar las atenciones agregadas preionando el botón rojo que está a su lado.\r\n\r"+
                 "Al terminar de llenar todas las atenciones del mes, abra el menú en la esquina superior derecha y elija ${stringResource(
                     id = R.string.resumen_mensual
                 )} \r\n\r" +

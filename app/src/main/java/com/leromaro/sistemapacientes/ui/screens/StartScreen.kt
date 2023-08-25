@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -69,55 +69,64 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
             AppBar(navController, viewModel)
 // FILA CAJA TEXT
             Row(
-                modifier = Modifier, verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                OutlinedTextField(modifier = Modifier.width(250.dp),
+                OutlinedTextField(
+                    modifier = Modifier
+                        .width(250.dp)
+                        .weight(0.5f),
                     textStyle = TextStyle(
                         fontSize = 20.sp
                     ),
                     singleLine = true,
                     maxLines = 1,
                     value = patientValue,
-                    onValueChange = { patientValue = it },
+                    onValueChange = { patientValue = it.uppercase() },
                     label = { Text(stringResource(id = R.string.paciente)) })
                 Spacer(Modifier.width(ButtonDefaults.IconSpacing))
-//ADD
-                ShowIcon(
-                    Icons.Default.Add,
-                    stringResource(id = R.string.agregar_paciente),
-                    onIconClick = {
-                        if (patientValue.isNotEmpty() && !patientList.contains(
-                                Pacientes(patientValue)
-                            )
-                        ) {
-                            patientList.add(Pacientes(patientValue))
-                            viewModel.currentValuePatients = patientValue
-                            viewModel.showToast(
-                                context, "$message \r\n\r${patientValue}"
-                            )
-                        } else {
-                            viewModel.showToast(context, errorNewPatient)
-                        }
-                        patientValue = ""
-                    },
-                    Color.Green
-                )
-                Spacer(modifier = Modifier.width(20.dp))
+                Column {
+                    //ADD
+                    ShowIcon(
+                        Icons.Default.Add,
+                        stringResource(id = R.string.agregar_paciente),
+                        onIconClick = {
+                            if (
+                                patientValue.isNotEmpty() && !patientList.contains(Pacientes(patientValue)                         )
+                            ) {
+                                patientList.add(Pacientes(patientValue.uppercase()))
+                                viewModel.currentValuePatients = patientValue
+                                viewModel.showToast(
+                                    context, "$message \r\n\r${patientValue}"
+                                )
+                            } else {
+                                viewModel.showToast(context, errorNewPatient)
+                            }
+                            patientValue = ""
+                        },
+                        Color.Green
+                    )
+                    Spacer(modifier = Modifier.height(ButtonDefaults.IconSpacing))
 //ERASE
-                ShowIcon(
-                    Icons.Default.Clear, stringResource(id = R.string.eliminar), onIconClick = {
-                        viewModel.showToast(context, erase)
-                        patientValue = ""
-                    }, Color.Yellow
-                )
+                    ShowIcon(
+                        Icons.Default.Clear, stringResource(id = R.string.eliminar), onIconClick = {
+                            viewModel.showToast(context, erase)
+                            patientValue = ""
+                        }, Color.Yellow
+                    )
+                }
             }
-            Spacer(modifier = Modifier.height(20.dp))//entre caja y spinner
+            Spacer(modifier = Modifier.height(10.dp))//entre caja y spinner
 //FILA SPINNERS Y BUTTON
-            Row {
+            Row(modifier = Modifier
+                .padding(16.dp)) {
 // COLUMN SPINNERS
-                Column(modifier = Modifier) {
+                Column(modifier = Modifier
+                    .weight(0.8f)) {
 //SPINNER PATIENTS
-                    ShowSpinner(stringResource(id = R.string.seleccion_paciente),
+                    ShowSpinner(
+                        stringResource(id = R.string.seleccion_paciente),
                         currentValuePatients,
                         expandedPatients,
                         onValueSelected = { newValue ->
@@ -143,9 +152,9 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
                         },
                         itemList = Codigo.values().map { it.tipo })
                 }
-                Spacer(modifier = Modifier.width(30.dp))
 // SAVE BUTTON
-                Column(modifier = Modifier.size(25.dp,130.dp),
+                Column(modifier = Modifier.
+                    height(130.dp),
                     verticalArrangement = Arrangement.Center) {
                     ShowIcon(
                         Icons.Default.Add,

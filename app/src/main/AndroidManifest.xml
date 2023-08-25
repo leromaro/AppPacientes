@@ -17,8 +17,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.SistemaPacientes">
+            android:theme="@style/Theme.SistemaPacientes.MyTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

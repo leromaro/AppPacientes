@@ -14,7 +14,7 @@ import java.io.File
 class AttendViewModel : ViewModel() {
     val listAttend = mutableStateListOf<Pair<String, String>>()
     val listPatients = mutableStateListOf<Pacientes>()
-    var currentValuePatients by  mutableStateOf("sin pacientes")
+    var currentValuePatients by  mutableStateOf("SIN PACIENTES")
     var currentValueCodes by   mutableStateOf(Codigo.CONSULTAS.tipo)
     val totalPatients: Int
         get() = listAttend.map { it.first }.distinct().size
