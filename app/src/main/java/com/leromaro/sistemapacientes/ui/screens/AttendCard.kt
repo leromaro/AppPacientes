@@ -20,8 +20,8 @@ import com.leromaro.sistemapacientes.ui.viewModel.AttendViewModel
 @Composable
 fun AttendCard(context: Context, viewModel : AttendViewModel, index: Int, item : Pair<String,String>) {
     Row(modifier = Modifier
-        .fillMaxWidth().
-        padding(16.dp),
+        .fillMaxWidth()
+        .padding(16.dp,8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween){
         Column (
@@ -40,7 +40,7 @@ fun AttendCard(context: Context, viewModel : AttendViewModel, index: Int, item :
             icon = Icons.Default.Clear,
             description = "clear attend",
             onIconClick = { viewModel.listAttend.removeAt(index)
-                viewModel.lazyColumnDeleteItem(context) },
+               viewModel.lazyColumnDeleteItem(context) },
             Color.Red)
         }
     }

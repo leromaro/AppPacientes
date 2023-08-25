@@ -23,7 +23,7 @@ fun ShowSpinner(
     expanded: Boolean,
     onValueSelected: (String) -> Unit,
     onDismiss: () -> Unit,
-    onSusses : () -> Unit,
+    onSusses: () -> Unit,
     itemList: List<String>
 ) {
 // TITTLE
@@ -37,30 +37,24 @@ fun ShowSpinner(
         horizontalArrangement = Arrangement.Center
     ) {
         Row(
-            modifier = Modifier
-                .clickable {
+            modifier = Modifier.clickable {
                 onSusses()
             }, verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier.width(250.dp),
-                text = currentValue,
-                fontSize = 20.sp
+                modifier = Modifier.width(250.dp), text = currentValue, fontSize = 20.sp
             )
             Icon(
-                imageVector = Icons.Filled.ArrowDropDown,
-                contentDescription = null
+                imageVector = Icons.Filled.ArrowDropDown, contentDescription = null
             )
             DropdownMenu(expanded = expanded, onDismissRequest = {
                 onDismiss()
             }) {
                 itemList.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(text = item) },
-                        onClick = {
-                            onValueSelected(item)
-                            onDismiss()
-                        })
+                    DropdownMenuItem(text = { Text(text = item) }, onClick = {
+                        onValueSelected(item)
+                        onDismiss()
+                    })
                 }
             }
         }

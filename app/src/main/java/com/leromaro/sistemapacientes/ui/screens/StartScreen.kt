@@ -95,8 +95,7 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
                             if (
                                 patientValue.isNotEmpty() && !patientList.contains(Pacientes(patientValue)                         )
                             ) {
-                                patientList.add(Pacientes(patientValue.uppercase()))
-                                viewModel.currentValuePatients = patientValue
+                                viewModel.addPatient(patientValue)
                                 viewModel.showToast(
                                     context, "$message \r\n\r${patientValue}"
                                 )
@@ -182,7 +181,6 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
             LazyColumn {
                 itemsIndexed(viewModel.listAttend) { index, item ->
                     AttendCard(context, viewModel, index, item)
-
                 }
             }
         }

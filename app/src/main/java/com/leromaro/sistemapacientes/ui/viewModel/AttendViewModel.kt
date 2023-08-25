@@ -25,6 +25,10 @@ class AttendViewModel : ViewModel() {
     fun showToast(contexto: Context, mensaje: String) {
         Toast.makeText(contexto, mensaje, Toast.LENGTH_SHORT).show()
     }
+    fun addPatient(patient : String){
+        listPatients.add(Pacientes(patient.uppercase()))
+        currentValuePatients = patient
+    }
     fun lazyColumnDeleteItem(context: Context) {
         val file = File(context.filesDir, "contactos.txt")
         file.delete()

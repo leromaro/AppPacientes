@@ -17,7 +17,8 @@ fun DialogScreen(navController : NavController) {
             },
         title= {Text(text = "Ayuda")},
         text ={Text(
-            "Ingrese los pacientes de manera que el nombre no se repita (PÉREZ I y PÉREZ S)," +
+            "IMPORTANTE: desacrtive la rotación automática de pantalla para utilizar la app. \r\n\r" +
+                "Ingrese los pacientes de manera que el nombre no se repita (PÉREZ I y PÉREZ S)," +
                 " presione el botón verde para agregar el paciente.\r\n\r" +
                 "Presione el botón amarillo si desea limpiar la caja de texto.\r\n\r" +
                 "Para guardar una atención, elija el par paciente - código de cada atención y presione el botón azul.\r\n\r"+
