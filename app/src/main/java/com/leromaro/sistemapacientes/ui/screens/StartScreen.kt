@@ -14,6 +14,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import com.leromaro.sistemapacientes.R
 import androidx.compose.material3.OutlinedTextField
@@ -42,12 +44,6 @@ import com.leromaro.sistemapacientes.ui.viewModel.AttendViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
-    val message = stringResource(id = R.string.guardado)
-    val noPatients = stringResource(id = R.string.sin_pacientes)
-    val errorOnePatient = stringResource(id = R.string.error_un_paciente)
-    val saved = stringResource(id = R.string.guardado)
-    val erase = stringResource(id = R.string.toast_borrado)
-    val errorNewPatient = stringResource(id = R.string.error_nuevo_paciente)
     val patientList = viewModel.listPatients
     var expandedPatients by rememberSaveable { mutableStateOf(false) }
     var expandedCodes by rememberSaveable { mutableStateOf(false) }
@@ -55,6 +51,13 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
     val currentValueCodes = viewModel.currentValueCodes
     var patientValue by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
+
+    val message = stringResource(id = R.string.guardado)
+    val noPatients = stringResource(id = R.string.sin_pacientes)
+    val errorOnePatient = stringResource(id = R.string.error_un_paciente)
+    val saved = stringResource(id = R.string.guardado)
+    val erase = stringResource(id = R.string.toast_borrado)
+    val errorNewPatient = stringResource(id = R.string.error_nuevo_paciente)
 //COLUMN GENERAL
     Column(
         modifier = Modifier.fillMaxSize()
@@ -68,115 +71,125 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
 //APPBAR
             AppBar(navController, viewModel)
 // FILA CAJA TEXT
-            Row(
+            Card(
                 modifier = Modifier
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                OutlinedTextField(
+                    .padding(10.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+                    ){
+                Row(
                     modifier = Modifier
-                        .width(250.dp)
-                        .weight(0.5f),
-                    textStyle = TextStyle(
-                        fontSize = 20.sp
-                    ),
-                    singleLine = true,
-                    maxLines = 1,
-                    value = patientValue,
-                    onValueChange = { patientValue = it.uppercase() },
-                    label = { Text(stringResource(id = R.string.paciente)) })
-                Spacer(Modifier.width(ButtonDefaults.IconSpacing))
-                Column {
-                    //ADD
-                    ShowIcon(
-                        Icons.Default.Add,
-                        stringResource(id = R.string.agregar_paciente),
-                        onIconClick = {
-                            if (
-                                patientValue.isNotEmpty() && !patientList.contains(Pacientes(patientValue)                         )
-                            ) {
-                                viewModel.addPatient(patientValue)
-                                viewModel.showToast(
-                                    context, "$message \r\n\r${patientValue}"
-                                )
-                            } else {
-                                viewModel.showToast(context, errorNewPatient)
-                            }
-                            patientValue = ""
-                        },
-                        Color.Green
-                    )
-                    Spacer(modifier = Modifier.height(ButtonDefaults.IconSpacing))
-//ERASE
-                    ShowIcon(
-                        Icons.Default.Clear, stringResource(id = R.string.eliminar), onIconClick = {
-                            viewModel.showToast(context, erase)
-                            patientValue = ""
-                        }, Color.Yellow
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(10.dp))//entre caja y spinner
-//FILA SPINNERS Y BUTTON
-            Row(modifier = Modifier
-                .padding(16.dp)) {
-// COLUMN SPINNERS
-                Column(modifier = Modifier
-                    .weight(0.8f)) {
-//SPINNER PATIENTS
-                    ShowSpinner(
-                        stringResource(id = R.string.seleccion_paciente),
-                        currentValuePatients,
-                        expandedPatients,
-                        onValueSelected = { newValue ->
-                            viewModel.currentValuePatients = newValue
-                        },
-                        onDismiss = { expandedPatients = false },
-                        onSusses = { expandedPatients = true },
-                        patientList.map { it.paciente })
-                    Spacer(modifier = Modifier.height(20.dp))//entre spinner y spinner
-//SPINNER CODES
-                    ShowSpinner(
-                        stringResource(id = R.string.seleccion_codigo),
-                        currentValueCodes,
-                        expandedCodes,
-                        onValueSelected = { newValue ->
-                            viewModel.currentValueCodes = newValue
-                        },
-                        onDismiss = {
-                            expandedCodes = false
-                        },
-                        onSusses = {
-                            expandedCodes = true
-                        },
-                        itemList = Codigo.values().map { it.tipo })
-                }
-// SAVE BUTTON
-                Column(modifier = Modifier.
-                    height(130.dp),
-                    verticalArrangement = Arrangement.Center) {
-                    ShowIcon(
-                        Icons.Default.Add,
-                        description = stringResource(id = R.string.agregar_atencion),
-                        onIconClick = {
-                            if (currentValuePatients != noPatients) {
-                                viewModel.listAttend.add(
-                                    Pair(
-                                        currentValuePatients, currentValueCodes
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .width(250.dp)
+                            .weight(0.5f),
+                        textStyle = TextStyle(
+                            fontSize = 20.sp
+                        ),
+                        singleLine = true,
+                        maxLines = 1,
+                        value = patientValue,
+                        onValueChange = { patientValue = it.uppercase() },
+                        label = { Text(stringResource(id = R.string.paciente)) })
+                    Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+                    Column {
+                        //ADD
+                        ShowIcon(
+                            Icons.Default.Add,
+                            stringResource(id = R.string.agregar_paciente),
+                            onIconClick = {
+                                if (
+                                    patientValue.isNotEmpty() && !patientList.contains(Pacientes(patientValue)                         )
+                                ) {
+                                    viewModel.addPatient(patientValue)
+                                    viewModel.showToast(
+                                        context, "$message \r\n\r${patientValue}"
                                     )
-                                )
-                                viewModel.showToast(
-                                    context, "$saved \r\n\r${currentValuePatients} - $currentValueCodes"
-                                )
-                            } else {
-                                viewModel.showToast(context, errorOnePatient)
-                            }
-                        },
-                        Color.Blue
-                    )
+                                } else {
+                                    viewModel.showToast(context, errorNewPatient)
+                                }
+                                patientValue = ""
+                            },
+                            Color.Green
+                        )
+                        Spacer(modifier = Modifier.height(ButtonDefaults.IconSpacing))
+//ERASE
+                        ShowIcon(
+                            Icons.Default.Clear, stringResource(id = R.string.eliminar), onIconClick = {
+                                viewModel.showToast(context, erase)
+                                patientValue = ""
+                            }, Color.Yellow
+                        )
+                    }
                 }
             }
-//                }
+//FILA SPINNERS Y BUTTON
+            Card(
+                modifier = Modifier
+               .padding(10.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+            ){
+                Row(modifier = Modifier
+                    .padding(16.dp)) {
+// COLUMN SPINNERS
+                    Column(modifier = Modifier
+                        .weight(0.8f)) {
+//SPINNER PATIENTS
+                        ShowSpinner(
+                            stringResource(id = R.string.seleccion_paciente),
+                            currentValuePatients,
+                            expandedPatients,
+                            onValueSelected = { newValue ->
+                                viewModel.currentValuePatients = newValue
+                            },
+                            onDismiss = { expandedPatients = false },
+                            onSusses = { expandedPatients = true },
+                            patientList.map { it.paciente })
+                        Spacer(modifier = Modifier.height(20.dp))//entre spinner y spinner
+//SPINNER CODES
+                        ShowSpinner(
+                            stringResource(id = R.string.seleccion_codigo),
+                            currentValueCodes,
+                            expandedCodes,
+                            onValueSelected = { newValue ->
+                                viewModel.currentValueCodes = newValue
+                            },
+                            onDismiss = {
+                                expandedCodes = false
+                            },
+                            onSusses = {
+                                expandedCodes = true
+                            },
+                            itemList = Codigo.values().map { it.tipo })
+                    }
+// SAVE BUTTON
+                    Column(modifier = Modifier.
+                    height(130.dp),
+                        verticalArrangement = Arrangement.Center) {
+                        ShowIcon(
+                            Icons.Default.Add,
+                            description = stringResource(id = R.string.agregar_atencion),
+                            onIconClick = {
+                                if (currentValuePatients != noPatients) {
+                                    viewModel.listAttend.add(
+                                        Pair(
+                                            currentValuePatients, currentValueCodes
+                                        )
+                                    )
+                                    viewModel.showToast(
+                                        context, "$saved \r\n\r${currentValuePatients} - $currentValueCodes"
+                                    )
+                                } else {
+                                    viewModel.showToast(context, errorOnePatient)
+                                }
+                            },
+                            Color.Blue
+                        )
+                    }
+                }
+            }
 //ATTEND CARD
             LazyColumn {
                 itemsIndexed(viewModel.listAttend) { index, item ->
