@@ -1,6 +1,6 @@
 package com.leromaro.sistemapacientes.model
 
-enum class Codigo(
+enum class Codes(
     val tipo : String
     ){
         CONSULTAS("CONSULTAS"),

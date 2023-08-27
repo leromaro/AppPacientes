@@ -23,7 +23,8 @@ import com.leromaro.sistemapacientes.ui.viewModel.AttendViewModel
 fun AttendCard(
     context: Context, viewModel: AttendViewModel, index: Int, item: Pair<String, String>
 ) {
-    Card(modifier = Modifier,
+    Card(modifier = Modifier
+        .padding(10.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ){
         Row(

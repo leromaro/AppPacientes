@@ -77,9 +77,8 @@ fun AppBar(navController: NavController, viewModel: AttendViewModel) {
                     })
                 DropdownMenuItem(onClick = {
                     expanded = false
-                    viewModel.resetData()
                     coroutineScope.launch {
-                        viewModel.clearDataFiles(context)
+                        viewModel.clearData(context)
                         viewModel.showToast(context, erase)
                     }
                 }, text = {
@@ -89,9 +88,7 @@ fun AppBar(navController: NavController, viewModel: AttendViewModel) {
                 })
                 DropdownMenuItem(onClick = {
                     expanded = false
-                    coroutineScope.launch {
-                        viewModel.clearDataFiles(context)
-                    }
+                    viewModel.clearData(context)
                     exitProcess(0)
                 }, text = { Text(text = stringResource(id = R.string.salir)) })
             }

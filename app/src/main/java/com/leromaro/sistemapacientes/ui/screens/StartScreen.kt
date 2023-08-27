@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
@@ -34,23 +35,26 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.leromaro.sistemapacientes.model.Codigo
-import com.leromaro.sistemapacientes.model.Pacientes
+import com.leromaro.sistemapacientes.model.Codes
+import com.leromaro.sistemapacientes.model.Patients
 import com.leromaro.sistemapacientes.ui.screens.components.ShowIcon
 import com.leromaro.sistemapacientes.ui.screens.components.ShowSpinner
 import com.leromaro.sistemapacientes.ui.viewModel.AttendViewModel
 
-// save the patients y attend in a temporal file, read an open
+// when load attends load only the last attend
+// when load patients load whit empty spaces
+// write "sin pacientes" pero tiene pacientes
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
+    val context = LocalContext.current
+
     val patientList = viewModel.listPatients
     var expandedPatients by rememberSaveable { mutableStateOf(false) }
     var expandedCodes by rememberSaveable { mutableStateOf(false) }
     val currentValuePatients = viewModel.currentValuePatients
     val currentValueCodes = viewModel.currentValueCodes
     var patientValue by rememberSaveable { mutableStateOf("") }
-    val context = LocalContext.current
 
     val message = stringResource(id = R.string.guardado)
     val noPatients = stringResource(id = R.string.sin_pacientes)
@@ -90,6 +94,7 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
                         ),
                         singleLine = true,
                         maxLines = 1,
+                        shape = RoundedCornerShape(size = 15.dp),
                         value = patientValue,
                         onValueChange = { patientValue = it.uppercase() },
                         label = { Text(stringResource(id = R.string.paciente)) })
@@ -101,8 +106,9 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
                             stringResource(id = R.string.agregar_paciente),
                             onIconClick = {
                                 if (
-                                    patientValue.isNotEmpty() && !patientList.contains(Pacientes(patientValue)                         )
+                                    patientValue.isNotEmpty() && !patientList.contains(Patients(patientValue)                         )
                                 ) {
+                                    viewModel.saveDataPatient(context, patientValue)
                                     viewModel.addPatient(patientValue)
                                     viewModel.showToast(
                                         context, "$message \r\n\r${patientValue}"
@@ -146,7 +152,7 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
                             },
                             onDismiss = { expandedPatients = false },
                             onSusses = { expandedPatients = true },
-                            patientList.map { it.paciente })
+                            patientList.map { it.patient })
                         Spacer(modifier = Modifier.height(20.dp))//entre spinner y spinner
 //SPINNER CODES
                         ShowSpinner(
@@ -162,7 +168,7 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
                             onSusses = {
                                 expandedCodes = true
                             },
-                            itemList = Codigo.values().map { it.tipo })
+                            itemList = Codes.values().map { it.tipo })
                     }
 // SAVE BUTTON
                     Column(modifier = Modifier.
@@ -173,6 +179,7 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
                             description = stringResource(id = R.string.agregar_atencion),
                             onIconClick = {
                                 if (currentValuePatients != noPatients) {
+                                    viewModel.saveDataAttend(context, currentValuePatients, currentValueCodes  )
                                     viewModel.listAttend.add(
                                         Pair(
                                             currentValuePatients, currentValueCodes
