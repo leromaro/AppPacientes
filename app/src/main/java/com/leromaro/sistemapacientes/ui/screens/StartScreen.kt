@@ -23,6 +23,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -49,12 +50,13 @@ import com.leromaro.sistemapacientes.ui.viewModel.AttendViewModel
 fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
     val context = LocalContext.current
 
+    val valuePatients : String by viewModel.valuePatients.observeAsState(initial = "")
+    val valuePatientSpinner : String by viewModel.valuePatientSpinner.observeAsState(initial = if(valuePatients.isEmpty())"SIN PACIENTES" else  "$valuePatients")
+    val valueCodesSpinner : String by viewModel.valueCodesSpinner.observeAsState(initial = Codes.CONSULTAS.tipo)
     val patientList = viewModel.listPatients
+
     var expandedPatients by rememberSaveable { mutableStateOf(false) }
     var expandedCodes by rememberSaveable { mutableStateOf(false) }
-    val currentValuePatients = viewModel.currentValuePatients
-    val currentValueCodes = viewModel.currentValueCodes
-    var patientValue by rememberSaveable { mutableStateOf("") }
 
     val message = stringResource(id = R.string.guardado)
     val noPatients = stringResource(id = R.string.sin_pacientes)
@@ -77,7 +79,7 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
 // FILA CAJA TEXT
             Card(
                 modifier = Modifier
-                    .padding(10.dp),
+                    .padding(16.dp, 1.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
                     ){
                 Row(
@@ -95,28 +97,29 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
                         singleLine = true,
                         maxLines = 1,
                         shape = RoundedCornerShape(size = 15.dp),
-                        value = patientValue,
-                        onValueChange = { patientValue = it.uppercase() },
+                        value = valuePatients,
+                        onValueChange = { viewModel.onTextChange(it.uppercase()) },
                         label = { Text(stringResource(id = R.string.paciente)) })
                     Spacer(Modifier.width(ButtonDefaults.IconSpacing))
                     Column {
-                        //ADD
+//SAVE BUTTON
                         ShowIcon(
                             Icons.Default.Add,
                             stringResource(id = R.string.agregar_paciente),
                             onIconClick = {
                                 if (
-                                    patientValue.isNotEmpty() && !patientList.contains(Patients(patientValue)                         )
+                                    valuePatients.isNotEmpty() && !patientList.contains(Patients(valuePatients)                         )
                                 ) {
-                                    viewModel.saveDataPatient(context, patientValue)
-                                    viewModel.addPatient(patientValue)
+                                    viewModel.addPatient(valuePatients)
+                                    viewModel.saveDataPatient(context, valuePatients)
+                                    viewModel.spinnerPatientLoad(valuePatients)
                                     viewModel.showToast(
-                                        context, "$message \r\n\r${patientValue}"
+                                        context, "$message \r\n\r${valuePatients}"
                                     )
                                 } else {
                                     viewModel.showToast(context, errorNewPatient)
                                 }
-                                patientValue = ""
+                                viewModel.textErase()
                             },
                             Color.Green
                         )
@@ -125,7 +128,7 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
                         ShowIcon(
                             Icons.Default.Clear, stringResource(id = R.string.eliminar), onIconClick = {
                                 viewModel.showToast(context, erase)
-                                patientValue = ""
+                                viewModel.textErase()
                             }, Color.Yellow
                         )
                     }
@@ -134,7 +137,7 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
 //FILA SPINNERS Y BUTTON
             Card(
                 modifier = Modifier
-               .padding(10.dp),
+               .padding(16.dp, 1.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
             ){
                 Row(modifier = Modifier
@@ -145,10 +148,10 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
 //SPINNER PATIENTS
                         ShowSpinner(
                             stringResource(id = R.string.seleccion_paciente),
-                            currentValuePatients,
+                            valuePatientSpinner,
                             expandedPatients,
-                            onValueSelected = { newValue ->
-                                viewModel.currentValuePatients = newValue
+                            onValueSelected = {
+                              viewModel.onPatientSelected(it)
                             },
                             onDismiss = { expandedPatients = false },
                             onSusses = { expandedPatients = true },
@@ -157,10 +160,10 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
 //SPINNER CODES
                         ShowSpinner(
                             stringResource(id = R.string.seleccion_codigo),
-                            currentValueCodes,
+                            valueCodesSpinner,
                             expandedCodes,
-                            onValueSelected = { newValue ->
-                                viewModel.currentValueCodes = newValue
+                            onValueSelected = {
+                                viewModel.onCodesSelected(it)
                             },
                             onDismiss = {
                                 expandedCodes = false
@@ -178,15 +181,15 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
                             Icons.Default.Add,
                             description = stringResource(id = R.string.agregar_atencion),
                             onIconClick = {
-                                if (currentValuePatients != noPatients) {
-                                    viewModel.saveDataAttend(context, currentValuePatients, currentValueCodes  )
+                                if (valuePatientSpinner != noPatients) {
+                                    viewModel.saveDataAttend(context, valuePatientSpinner, valueCodesSpinner  )
                                     viewModel.listAttend.add(
                                         Pair(
-                                            currentValuePatients, currentValueCodes
+                                            valuePatientSpinner, valueCodesSpinner
                                         )
                                     )
                                     viewModel.showToast(
-                                        context, "$saved \r\n\r${currentValuePatients} - $currentValueCodes"
+                                        context, "$saved \r\n\r${valuePatientSpinner} - $valueCodesSpinner"
                                     )
                                 } else {
                                     viewModel.showToast(context, errorOnePatient)

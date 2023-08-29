@@ -24,7 +24,7 @@ fun AttendCard(
     context: Context, viewModel: AttendViewModel, index: Int, item: Pair<String, String>
 ) {
     Card(modifier = Modifier
-        .padding(10.dp),
+        .padding(16.dp, 1.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ){
         Row(
@@ -46,8 +46,7 @@ fun AttendCard(
             }
             ShowIcon(
                 icon = Icons.Default.Clear, description = "clear attend", onIconClick = {
-                    viewModel.listAttend.removeAt(index)
-                    viewModel.lazyColumnDeleteItem(context)
+                    viewModel.lazyColumnDeleteItem(context, index)
                 }, Color.Red
             )
         }
