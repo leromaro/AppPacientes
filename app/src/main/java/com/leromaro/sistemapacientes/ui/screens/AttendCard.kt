@@ -35,7 +35,13 @@ fun AttendCard(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(
-                modifier = Modifier.weight(0.4f)
+                modifier = Modifier.weight(0.1f)
+            ) {
+                val number : Int = index +1
+                Text(text = "$number")
+            }
+            Column(
+                modifier = Modifier.weight(0.3f)
             ) {
                 Text(text = item.first)
             }
