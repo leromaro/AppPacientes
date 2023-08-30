@@ -14,6 +14,7 @@
     <string name="error_un_paciente">Debe ingresar al menos un paciente</string>
     <string name="resumen_mensual">Resumen mensual</string>
     <string name="pacientes_totales">Pacientes totales</string>
+    <string name="atenciones_totales">Prácticas totales</string>
     <string name="modificar">Modificar</string>
     <string name="salir">Salir</string>
     <string name="entendido">Entendido</string>

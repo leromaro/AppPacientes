@@ -1,6 +1,7 @@
 package com.leromaro.sistemapacientes.ui.screens
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -31,7 +32,10 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import com.leromaro.sistemapacientes.ui.screens.components.RedPoint
 import com.leromaro.sistemapacientes.ui.screens.components.ShowIcon
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -44,6 +48,8 @@ fun AppBar(navController: NavController, viewModel: AttendViewModel) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val erase = stringResource(id = R.string.toast_borrado)
+    val resume : Boolean by viewModel.resume.observeAsState(initial = false )
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
 //        color = Color.Green
@@ -57,11 +63,16 @@ fun AppBar(navController: NavController, viewModel: AttendViewModel) {
                 }, color = Color.White
             )
         }, actions = {
-            Icon(imageVector = Icons.Default.MoreVert,
-                contentDescription = "Menu",
-                modifier = Modifier.clickable {
-                    expanded = !expanded
-                })
+            Box(modifier = Modifier){
+                Icon(imageVector = Icons.Default.MoreVert,
+                    contentDescription = "Menu",
+                    modifier = Modifier.clickable {
+                        expanded = !expanded
+                    })
+                if (resume){
+                    RedPoint(modifier = Modifier.align(Alignment.TopEnd))
+                }
+            }
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
@@ -73,11 +84,6 @@ fun AppBar(navController: NavController, viewModel: AttendViewModel) {
                     onClick = {
                         expanded = false
                         navController.navigate(AppScreens.ResultScreen.route)
-                    })
-                DropdownMenuItem(text = { Text(text = "abrir") },
-                    onClick = {
-                        expanded = false
-                       viewModel.openFileWithExternalEditor(context)
                     })
                 DropdownMenuItem(onClick = {
                     expanded = false

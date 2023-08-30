@@ -23,10 +23,10 @@ import com.leromaro.sistemapacientes.ui.viewModel.AttendViewModel
 fun AttendCard(
     context: Context, viewModel: AttendViewModel, index: Int, item: Pair<String, String>
 ) {
-    Card(modifier = Modifier
-        .padding(16.dp, 1.dp),
+    Card(
+        modifier = Modifier.padding(16.dp, 1.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
-    ){
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()

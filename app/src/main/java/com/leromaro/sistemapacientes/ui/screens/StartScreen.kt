@@ -42,16 +42,15 @@ import com.leromaro.sistemapacientes.ui.screens.components.ShowIcon
 import com.leromaro.sistemapacientes.ui.screens.components.ShowSpinner
 import com.leromaro.sistemapacientes.ui.viewModel.AttendViewModel
 
-// when load attends load only the last attend
-// when load patients load whit empty spaces
-// write "sin pacientes" pero tiene pacientes
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
     val context = LocalContext.current
 
     val valuePatients : String by viewModel.valuePatients.observeAsState(initial = "")
-    val valuePatientSpinner : String by viewModel.valuePatientSpinner.observeAsState(initial = if(valuePatients.isEmpty())"SIN PACIENTES" else  "$valuePatients")
+    val valuePatientSpinner : String by viewModel.valuePatientSpinner.observeAsState(initial = valuePatients.ifEmpty { stringResource(
+        id = R.string.sin_pacientes
+    ) }) // if empty -> lambda else valuePatients
     val valueCodesSpinner : String by viewModel.valueCodesSpinner.observeAsState(initial = Codes.CONSULTAS.tipo)
     val patientList = viewModel.listPatients
 
@@ -183,11 +182,7 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
                             onIconClick = {
                                 if (valuePatientSpinner != noPatients) {
                                     viewModel.saveDataAttend(context, valuePatientSpinner, valueCodesSpinner  )
-                                    viewModel.listAttend.add(
-                                        Pair(
-                                            valuePatientSpinner, valueCodesSpinner
-                                        )
-                                    )
+                                    viewModel.addAttend(valuePatientSpinner,valueCodesSpinner)
                                     viewModel.showToast(
                                         context, "$saved \r\n\r${valuePatientSpinner} - $valueCodesSpinner"
                                     )

@@ -31,6 +31,7 @@ import kotlin.system.exitProcess
 @Composable
 fun ResultScreen(navController: NavController, viewModel: AttendViewModel) {
     val totalPatients = viewModel.totalPatients
+    val totalUnitCodes = viewModel.totalUnitCodes
     val totalCodes = viewModel.totalCodes
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -57,7 +58,13 @@ fun ResultScreen(navController: NavController, viewModel: AttendViewModel) {
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                for ((code, value) in totalCodes) {
+                Text(
+                    text = "${stringResource(id = R.string.atenciones_totales)} = $totalCodes",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                for ((code, value) in totalUnitCodes) {
                     Text(
                         text = "$code = $value", fontSize = 16.sp, fontWeight = FontWeight.Normal
                     )
