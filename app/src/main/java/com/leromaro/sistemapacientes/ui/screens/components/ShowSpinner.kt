@@ -51,7 +51,7 @@ fun ShowSpinner(
                 onDismiss()
             }) {
                 itemList.forEach { item ->
-                    DropdownMenuItem(text = { Text(text = item) }, onClick = {
+                    DropdownMenuItem(text = { Text(text = item, maxLines = 1) }, onClick = {
                         onValueSelected(item)
                         onDismiss()
                     })

@@ -10,7 +10,6 @@ import com.leromaro.sistemapacientes.ui.screens.ResultScreen
 import com.leromaro.sistemapacientes.ui.screens.SplashScreen
 import com.leromaro.sistemapacientes.ui.screens.StartScreen
 import com.leromaro.sistemapacientes.ui.viewModel.AttendViewModel
-import com.leromaro.sistemapacientes.ui.screens.AppBar
 import com.leromaro.sistemapacientes.ui.screens.components.DialogScreen
 
 @Composable
@@ -32,11 +31,5 @@ fun AppNavigation(viewModel: AttendViewModel, context : Context) {
         composable(route = AppScreens.DialogScreen.route) {
             DialogScreen(navController)
         }
-        composable(route = AppScreens.AppBar.route){
-            AppBar(navController, viewModel)
-        }
-//        composable(route = AppScreens.Banner.route){
-//            Banner()
-//        }
     }
 }

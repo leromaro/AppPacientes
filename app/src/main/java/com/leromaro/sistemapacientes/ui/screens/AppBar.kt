@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,12 +28,14 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.*
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.leromaro.sistemapacientes.ui.screens.components.RedPoint
 import com.leromaro.sistemapacientes.ui.screens.components.ShowIcon
 import kotlinx.coroutines.delay
@@ -43,7 +44,14 @@ import kotlin.system.exitProcess
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar(navController: NavController, viewModel: AttendViewModel) {
+fun AppBar(navController: NavController,
+           viewModel: AttendViewModel,
+           icon : ImageVector,
+           text : String,
+           onIconClick: ()-> Unit,
+           color : Color,
+           start : Boolean
+) {
     var expanded by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -52,24 +60,28 @@ fun AppBar(navController: NavController, viewModel: AttendViewModel) {
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
-//        color = Color.Green
     ) {
-        TopAppBar(title = {
-            Text(text = stringResource(id = R.string.app_name))
-        }, navigationIcon = {
+        TopAppBar(
+            title = {
+            Text(text = stringResource(id = R.string.app_name),
+                color = MaterialTheme.colorScheme.onPrimary)
+        },
+            navigationIcon = {
             ShowIcon(
-                icon = Icons.Default.Info, description = "info", onIconClick = {
-                    navController.navigate(AppScreens.DialogScreen.route)
-                }, color = Color.White
-            )
-        }, actions = {
+                icon,
+                text,
+                onIconClick,
+                color
+            ) },
+            actions = {
             Box(modifier = Modifier){
                 Icon(imageVector = Icons.Default.MoreVert,
                     contentDescription = "Menu",
                     modifier = Modifier.clickable {
                         expanded = !expanded
-                    })
-                if (resume){
+                    }, tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                if (resume && start){
                     RedPoint(modifier = Modifier.align(Alignment.TopEnd))
                 }
             }
@@ -80,22 +92,24 @@ fun AppBar(navController: NavController, viewModel: AttendViewModel) {
                     .padding(end = 8.dp)
                     .widthIn(max = 200.dp)
             ) {
-                DropdownMenuItem(text = { Text(text = stringResource(id = R.string.resumen_mensual)) },
-                    onClick = {
+                if (start){
+                    DropdownMenuItem(text = { Text(text = stringResource(id = R.string.resumen_mensual)) },
+                        onClick = {
+                            expanded = false
+                            navController.navigate(AppScreens.ResultScreen.route)
+                        })
+                    DropdownMenuItem(onClick = {
                         expanded = false
-                        navController.navigate(AppScreens.ResultScreen.route)
+                        coroutineScope.launch {
+                            viewModel.clearData(context)
+                            viewModel.showToast(context, erase)
+                        }
+                    }, text = {
+                        Text(
+                            text = stringResource(id = R.string.borrar)
+                        )
                     })
-                DropdownMenuItem(onClick = {
-                    expanded = false
-                    coroutineScope.launch {
-                        viewModel.clearData(context)
-                        viewModel.showToast(context, erase)
-                    }
-                }, text = {
-                    Text(
-                        text = stringResource(id = R.string.borrar)
-                    )
-                })
+                }
                 DropdownMenuItem(onClick = {
                     expanded = false
                     coroutineScope.launch {
@@ -107,7 +121,7 @@ fun AppBar(navController: NavController, viewModel: AttendViewModel) {
                 }, text = { Text(text = stringResource(id = R.string.salir)) })
             }
         }, colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor = Color.LightGray
+            containerColor = MaterialTheme.colorScheme.primary
         )
         )
     }

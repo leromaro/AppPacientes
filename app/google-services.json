@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "815819050662",
+    "project_id": "resumen-mensual",
+    "storage_bucket": "resumen-mensual.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815819050662:android:4aba4b4457d3536ced6e67",
+        "android_client_info": {
+          "package_name": "com.leromaro.sistemapacientes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "815819050662-7uqd0mtbbhlqirutqii7g5di1g5htvbs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8sbiEx-MlAwy9d1Rp1tAEUOK5xBAgGxs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "815819050662-7uqd0mtbbhlqirutqii7g5di1g5htvbs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -14,10 +14,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import com.leromaro.sistemapacientes.R
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -38,7 +40,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.leromaro.sistemapacientes.model.Codes
 import com.leromaro.sistemapacientes.model.Patients
-import com.leromaro.sistemapacientes.ui.screens.components.ShowIcon
+import com.leromaro.sistemapacientes.navigation.AppScreens
+import com.leromaro.sistemapacientes.ui.screens.components.ShowButton
 import com.leromaro.sistemapacientes.ui.screens.components.ShowSpinner
 import com.leromaro.sistemapacientes.ui.viewModel.AttendViewModel
 
@@ -46,6 +49,8 @@ import com.leromaro.sistemapacientes.ui.viewModel.AttendViewModel
 @Composable
 fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
     val context = LocalContext.current
+
+    val counterMaxLength = 20
 
     val valuePatients : String by viewModel.valuePatients.observeAsState(initial = "")
     val valuePatientSpinner : String by viewModel.valuePatientSpinner.observeAsState(initial = valuePatients.ifEmpty { stringResource(
@@ -74,12 +79,19 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 //APPBAR
-            AppBar(navController, viewModel)
+            AppBar(navController,
+                viewModel,
+                Icons.Default.Info,
+                "info",
+                {navController.navigate(AppScreens.DialogScreen.route)},
+                MaterialTheme.colorScheme.onPrimary,
+                true)
 // FILA CAJA TEXT
             Card(
                 modifier = Modifier
                     .padding(16.dp, 1.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = 25.dp),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface)
                     ){
                 Row(
                     modifier = Modifier
@@ -97,15 +109,36 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
                         maxLines = 1,
                         shape = RoundedCornerShape(size = 15.dp),
                         value = valuePatients,
-                        onValueChange = { viewModel.onTextChange(it.uppercase()) },
-                        label = { Text(stringResource(id = R.string.paciente)) })
+                        onValueChange = {
+                            if (counterMaxLength > it.length ){
+                                viewModel.onTextChange(it.uppercase()) }
+                            },
+                        label = { Text(stringResource(id = R.string.paciente)) },
+                        trailingIcon = {
+                            if (valuePatients.isNotBlank())
+//ERASE BUTTON
+                                ShowButton(
+                                    text = "",
+                                    Icons.Default.Clear,
+                                    Color.Yellow,
+                                    modifier = Modifier.width(40.dp),
+                                    onClick = {
+                                        viewModel.showToast(context, erase)
+                                        viewModel.textErase()
+                                    }
+                                )
+                        }
+
+                    )
                     Spacer(Modifier.width(ButtonDefaults.IconSpacing))
                     Column {
 //SAVE BUTTON
-                        ShowIcon(
+                        ShowButton(
+                            text = "",
                             Icons.Default.Add,
-                            stringResource(id = R.string.agregar_paciente),
-                            onIconClick = {
+                            Color.Green,
+                            modifier = Modifier.width(40.dp),
+                            onClick =  {
                                 if (
                                     valuePatients.isNotEmpty() && !patientList.contains(Patients(valuePatients)                         )
                                 ) {
@@ -119,16 +152,7 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
                                     viewModel.showToast(context, errorNewPatient)
                                 }
                                 viewModel.textErase()
-                            },
-                            Color.Green
-                        )
-                        Spacer(modifier = Modifier.height(ButtonDefaults.IconSpacing))
-//ERASE
-                        ShowIcon(
-                            Icons.Default.Clear, stringResource(id = R.string.eliminar), onIconClick = {
-                                viewModel.showToast(context, erase)
-                                viewModel.textErase()
-                            }, Color.Yellow
+                            }
                         )
                     }
                 }
@@ -137,7 +161,8 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
             Card(
                 modifier = Modifier
                .padding(16.dp, 1.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface)
             ){
                 Row(modifier = Modifier
                     .padding(16.dp)) {
@@ -176,10 +201,12 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
                     Column(modifier = Modifier.
                     height(130.dp),
                         verticalArrangement = Arrangement.Center) {
-                        ShowIcon(
+                        ShowButton(
+                            text = "",
                             Icons.Default.Add,
-                            description = stringResource(id = R.string.agregar_atencion),
-                            onIconClick = {
+                            Color.Blue,
+                            modifier = Modifier.width(40.dp),
+                            onClick = {
                                 if (valuePatientSpinner != noPatients) {
                                     viewModel.saveDataAttend(context, valuePatientSpinner, valueCodesSpinner  )
                                     viewModel.addAttend(valuePatientSpinner,valueCodesSpinner)
@@ -189,8 +216,7 @@ fun StartScreen(navController: NavController, viewModel: AttendViewModel) {
                                 } else {
                                     viewModel.showToast(context, errorOnePatient)
                                 }
-                            },
-                            Color.Blue
+                            }
                         )
                     }
                 }
